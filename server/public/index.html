@@ -1,0 +1,57 @@
+<!DOCTYPE HTML> <html lang="en"> 
+
+<head> <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+<link rel="stylesheet" href="assets/css/main.css">
+<title>s t i c k d a n c e</title> 
+</head> 
+<body id='body'> 
+
+</body>
+<!-- <script src="assets/js/index.js"></script> -->
+<script>
+	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
+    var ws = new WebSocket('ws://localhost:40510');
+    // event emmited when connected
+    ws.onopen = function () {
+        console.log('websocket is connected ...')
+        // sending a send event to websocket server
+        ws.send('connected')
+    }
+    // event emmited when receiving message 
+    ws.onmessage = function (ev) {
+    	var result = ev.data.substring(1, ev.data.length-1);
+    	result = result.replace(/\s/g, '');
+    	var data = result.split(",")
+    	changeSound(data);
+    }
+
+	var context = new AudioContext()
+
+	var o = context.createOscillator()
+	var  g = context.createGain()
+	o.connect(g)
+	g.connect(context.destination)
+	o.start(0)
+
+	var body = document.getElementById('body')
+	console.log(body)
+
+	function changeSound(note) {
+		console.log(note[1]);
+		if(note[1] === undefined)
+			o.frequency.value = 4000;
+		else
+			o.frequency.value = note[1]%5000;
+	}
+
+	setInterval(changeSound, 1000);
+
+	// One-liner to resume playback when user interacted with the page.
+	document.addEventListener('click', function() {
+	  context.resume().then(() => {
+	    console.log('Playback resumed successfully');
+	  });
+	});
+</script>
+</html>

@@ -1,0 +1,29 @@
+body {
+	background-color: pink;
+}
+
+#clickme {
+  position: fixed;
+  width: 200px;
+  left: 50%;
+  margin-left: -100px;
+  height: 150px;
+  background-color: blue;
+  color: white;
+  top: 120px;
+  border-radius: 10px;
+}
+
+.buttontext{
+	padding: 45px;
+	padding-left: 55px;
+}
+
+/*typeface*/
+body { font-family: Nunito; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } 
+h1 { font-family: Nunito; font-size: 24px; font-style: normal; font-variant: normal; font-weight: bold; line-height: 26px; } 
+h3 { font-family: Nunito; font-size: 14px; font-style: normal; font-variant: normal; font-weight: bold; line-height: 15px; } 
+b { font-family: Nunito; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 800; line-height: 20px; } 
+p { font-family: Nunito; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } 
+blockquote { font-family: Nunito; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } 
+pre { font-family: Nunito; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18px; }
