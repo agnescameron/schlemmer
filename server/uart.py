@@ -109,9 +109,16 @@ def main():
         def received(data):
             ints = struct.unpack('IIII', data)
             print('Received:', ints)
-            file = open(filename, "w")
-            file.write(str(ints))
-            file.close
+            if (ints[3] == 1):
+                print('data from 1')
+                file1 = open(filename1, "w")
+                file1.write(str(ints))
+                file1.close
+            if (ints[3] == 2):
+                print('data from 2')
+                file2 = open(filename2, "w")
+                file2.write(str(ints))
+                file2.close
 
         # Turn on notification of RX characteristics using the callback above.
         print('Subscribing to RX characteristic changes...')
@@ -125,11 +132,17 @@ def main():
         # Make sure device is disconnected on exit.
         device.disconnect()
 
-filename = "data.txt"
+filename1 = "data1.txt"
+filename2 = "data2.txt"
 
-file = open(filename, "w")
-file.write('')
-file.close
+file1 = open(filename1, "w")
+file1.write('')
+file1.close
+
+file2 = open(filename1, "w")
+file2.write('')
+file2.close
+
 
 # Initialize the BLE system.  MUST be called before other BLE calls!
 ble.initialize()
