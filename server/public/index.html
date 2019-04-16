@@ -43,39 +43,74 @@
 })();
 
 
-    var ws = new WebSocket('ws://localhost:40510');
+    var ws1 = new WebSocket('ws://localhost:40510');
     // event emmited when connected
-    ws.onopen = function () {
-        console.log('websocket is connected ...')
+    ws1.onopen = function () {
+        console.log('websocket 1 is connected ...')
         // sending a send event to websocket server
-        ws.send('connected')
+        ws1.send('connected')
     }
     // event emmited when receiving message 
-    ws.onmessage = function (ev) {
+    ws1.onmessage = function (ev) {
     	var result = ev.data.substring(1, ev.data.length-1);
     	result = result.replace(/\s/g, '');
     	var data = result.split(",")
-    	changeSound(data);
+    	changeSound1(data);
     }
 
-	var context = new AudioContext()
 
-	var o = context.createOscillator()
-	var  g = context.createGain()
-	o.connect(g)
-	g.connect(context.destination)
-	o.start(0);
+
+    var ws2 = new WebSocket('ws://localhost:40511');
+    // event emmited when connected
+    ws2.onopen = function () {
+        console.log('websocket 2 is connected ...')
+        // sending a send event to websocket server
+        ws2.send('connected')
+    }
+    // event emmited when receiving message 
+    ws2.onmessage = function (ev) {
+    	var result = ev.data.substring(1, ev.data.length-1);
+    	result = result.replace(/\s/g, '');
+    	var data = result.split(",")
+    	changeSound2(data);
+    }
+
+
+	var context1 = new AudioContext()
+
+	var o1 = context1.createOscillator()
+	var  g1 = context1.createGain()
+	o1.connect(g1)
+	g1.connect(context1.destination)
+	o1.start(0);
+
+	var context2 = new AudioContext()
+
+	var o2 = context2.createOscillator()
+	var  g2 = context2.createGain()
+	o2.connect(g2)
+	g2.connect(context2.destination)
+	o2.start(0);
 
 	var body = document.getElementById('body')
 	console.log(body)
 
-	function changeSound(note) {
+	function changeSound1(note) {
 		if(note === undefined){
-			o.frequency.value = parseFloat(600);
+			o1.frequency.value = parseFloat(600);
 		}
 		else
-			o.frequency.value = parseFloat(Math.round(note[1]/500)%900)*5+100;
+			o1.frequency.value = parseFloat(Math.round(note[1]/500)%900)*5+100;
 	}
+
+	function changeSound2(note) {
+		if(note === undefined){
+			o2.frequency.value = parseFloat(600);
+		}
+		else
+			o2.frequency.value = parseFloat(Math.round(note[1]/500)%900)*5+100;
+	}
+
 
 	// setInterval(changeSound, soundPeriod);
 
