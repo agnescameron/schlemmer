@@ -7,9 +7,41 @@
 <body id='body'> 
 
 </body>
+
 <!-- <script src="assets/js/index.js"></script> -->
 <script>
+(function() {
 	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	if (window.AudioContext) {
+		window.audioContext = new window.AudioContext();
+	}
+	var fixAudioContext = function (e) {
+		if (window.audioContext) {
+			// Create empty buffer
+			var buffer = window.audioContext.createBuffer(1, 1, 22050);
+			var source = window.audioContext.createBufferSource();
+			source.buffer = buffer;
+			// Connect to output (speakers)
+			source.connect(window.audioContext.destination);
+			// Play sound
+			if (source.start) {
+				source.start(0);
+			} else if (source.play) {
+				source.play(0);
+			} else if (source.noteOn) {
+				source.noteOn(0);
+			}
+		}
+		// Remove events
+		document.removeEventListener('touchstart', fixAudioContext);
+		document.removeEventListener('touchend', fixAudioContext);
+	};
+	// iOS 6-8
+	document.addEventListener('touchstart', fixAudioContext);
+	// iOS 9
+	document.addEventListener('touchend', fixAudioContext);
+})();
+
 
     var ws = new WebSocket('ws://localhost:40510');
     // event emmited when connected
@@ -32,20 +64,20 @@
 	var  g = context.createGain()
 	o.connect(g)
 	g.connect(context.destination)
-	o.start(0)
+	o.start(0);
 
 	var body = document.getElementById('body')
 	console.log(body)
 
 	function changeSound(note) {
-		console.log(note[1]);
-		if(note[1] === undefined)
-			o.frequency.value = 4000;
+		if(note === undefined){
+			o.frequency.value = parseFloat(600);
+		}
 		else
-			o.frequency.value = note[1]%5000;
+			o.frequency.value = parseFloat(Math.round(note[1]/500)%900)*5+100;
 	}
 
-	setInterval(changeSound, 1000);
+	// setInterval(changeSound, soundPeriod);
 
 	// One-liner to resume playback when user interacted with the page.
 	document.addEventListener('click', function() {

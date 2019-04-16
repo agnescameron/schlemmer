@@ -21,17 +21,25 @@ app.get('/', function(req, res){
  
 
 var WebSocketServer = require('ws').Server,
-  wss = new WebSocketServer({port: 40510})
+wss = new WebSocketServer({port: 40510})
+
 wss.on('connection', function (ws) {
-  ws.on('message', function (message) {
-    console.log('received: %s', message)
-  })
-  setInterval(
-    () => {
-	  fs.readFile('./data.txt', function(err, data) {
-	    ws.send(`${data}`)
-	  });
-    }, 100)
+	wss.clients.forEach(function(client){
+	  ws.on('message', function (message) {
+	    console.log('received: %s', message)
+	  })
+	  setInterval(
+	    () => { 
+		  fs.readFile('./data.txt', function(err, data) {
+			   	try{
+			    	ws.send(`${data}`)
+			   	}
+			    catch(err){
+			    	// console.log('sorry babe')
+			    }
+			});
+		  });
+	   }, 100)
 })
 
 
