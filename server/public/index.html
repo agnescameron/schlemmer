@@ -6,6 +6,8 @@
 </head> 
 <body id='body'> 
 
+<button onClick=createAudio()>clickme</button>
+
 </body>
 
 <!-- <script src="assets/js/index.js"></script> -->
@@ -43,7 +45,7 @@
 })();
 
 
-    var ws1 = new WebSocket('ws://localhost:40510');
+    var ws1 = new WebSocket('ws://10.0.1.2:40510');
     // event emmited when connected
     ws1.onopen = function () {
         console.log('websocket 1 is connected ...')
@@ -60,7 +62,7 @@
 
 
 
-    var ws2 = new WebSocket('ws://localhost:40511');
+    var ws2 = new WebSocket('ws://10.0.1.2:40511');
     // event emmited when connected
     ws2.onopen = function () {
         console.log('websocket 2 is connected ...')
@@ -100,7 +102,7 @@
 			o1.frequency.value = parseFloat(600);
 		}
 		else
-			o1.frequency.value = parseFloat(Math.round(note[1]/500)%900)*5+100;
+			o1.frequency.value = parseFloat(Math.round(note[1]/500)%900)*4+100;
 	}
 
 	function changeSound2(note) {
@@ -108,10 +110,13 @@
 			o2.frequency.value = parseFloat(600);
 		}
 		else
-			o2.frequency.value = parseFloat(Math.round(note[1]/500)%900)*5+100;
+			o2.frequency.value = parseFloat(Math.round(note[1]/500)%900)*4+100;
 	}
 
-
+	function createAudio(){
+	    context1.resume();
+	    context2.resume();
+	  }
 	// setInterval(changeSound, soundPeriod);
 
 	// One-liner to resume playback when user interacted with the page.
