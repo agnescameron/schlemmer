@@ -45,7 +45,10 @@
 })();
 
 
-    var ws1 = new WebSocket('ws://10.0.1.2:40510');
+	var lastdata1 = [1000, 1000, 1000];
+	var lastdata2 =[1000, 1000, 1000];
+
+    var ws1 = new WebSocket('ws://10.252.150.128:40510');
     // event emmited when connected
     ws1.onopen = function () {
         console.log('websocket 1 is connected ...')
@@ -56,13 +59,16 @@
     ws1.onmessage = function (ev) {
     	var result = ev.data.substring(1, ev.data.length-1);
     	result = result.replace(/\s/g, '');
-    	var data = result.split(",")
-    	changeSound1(data);
+    	var data = result.split(",");
+    	if(data[1]-lastdata1[1] > 1000){
+    		changeSound1(data);
+    	}
+    	lastdata1 = data;
     }
 
 
 
-    var ws2 = new WebSocket('ws://10.0.1.2:40511');
+    var ws2 = new WebSocket('ws://10.252.150.128:40511');
     // event emmited when connected
     ws2.onopen = function () {
         console.log('websocket 2 is connected ...')
@@ -74,7 +80,11 @@
     	var result = ev.data.substring(1, ev.data.length-1);
     	result = result.replace(/\s/g, '');
     	var data = result.split(",")
-    	changeSound2(data);
+       	if(data[1]-lastdata2[1] > 1000){
+    		changeSound2(data);
+    	}
+    	// changeSound2(data);
+    	lastdata2 = data;
     }
 
 
@@ -94,23 +104,45 @@
 	g2.connect(context2.destination)
 	o2.start(0);
 
+	var context3 = new AudioContext()
+
+	var o3 = context3.createOscillator()
+	var  g3 = context3.createGain()
+	o3.connect(g3)
+	g3.connect(context3.destination)
+	// o3.start(0);
+
+	var context4 = new AudioContext()
+
+	var o4 = context4.createOscillator()
+	var  g4 = context4.createGain()
+	o4.connect(g4)
+	g4.connect(context4.destination)
+	// o4.start(0);
+
 	var body = document.getElementById('body')
 	console.log(body)
 
 	function changeSound1(note) {
 		if(note === undefined){
-			o1.frequency.value = parseFloat(600);
+			o1.frequency.value = parseFloat(50);
+			// o3.frequency.value = parseFloat(400);
 		}
 		else
-			o1.frequency.value = parseFloat(Math.round(note[1]/500)%900)*4+100;
+			//o1.frequency.value = parseFloat(Math.round(note[1]/500)%600)*2.5+150;
+			// o3.frequency.value = parseFloat(Math.round(note[2]/500)%400)*3;
+			o1.frequency.value = (o1.frequency.value + 100)%995;
 	}
 
 	function changeSound2(note) {
 		if(note === undefined){
-			o2.frequency.value = parseFloat(600);
+			o2.frequency.value = parseFloat(50);
+			// o4.frequency.value = parseFloat(700);			
 		}
 		else
-			o2.frequency.value = parseFloat(Math.round(note[1]/500)%900)*4+100;
+			//o2.frequency.value = parseFloat(Math.round(note[1]/500)%600)*2.5+150;
+			// o4.frequency.value = parseFloat(Math.round(note[2]/500)%800)*2+150;
+			o2.frequency.value = (o2.frequency.value + 100)%885;
 	}
 
 	function createAudio(){
