@@ -16,7 +16,8 @@ import socket
 import sys
 import os
 
-server_address = './uds_socket'
+from Queue import Queue
+from threading import Thread
 
 
 # Enable debug output.
@@ -30,6 +31,8 @@ RX_CHAR_UUID      = uuid.UUID('6E400003-B5A3-F393-E0A9-E50E24DCCA9E')
 # Get the BLE provider for the current platform.
 ble = Adafruit_BluefruitLE.get_provider()
 
+# how many devices are you working with
+numDevices = 4
 
 # Main function implements the program logic so it can run in a background
 # thread.  Most platforms require the main thread to handle GUI events and other
@@ -57,26 +60,23 @@ def main():
         adapter.start_scan()
         # Search for the first UART device found (will time out after 60 seconds
         # but you can specify an optional timeout_sec parameter to change it).
-        found1 = None
-        found2 = None
-        devices = [0, 0]
-        devices[0] = ble.find_device(service_uuids=[UART_SERVICE_UUID], name='accelo1')
-        if devices[0] is None:
-            raise RuntimeError('Failed to find UART device 1!')
-        devices[1] = ble.find_device(service_uuids=[UART_SERVICE_UUID], name='accelo2')
-        if devices[1] is None:
-            raise RuntimeError('Failed to find UART device 2!')
+        devices = []
+        for i in range (0, numDevices):
+            deviceName = 'generic%d' % i
+            print(deviceName)
+            device = ble.find_device(service_uuids=[UART_SERVICE_UUID], name=deviceName)
+            if device is None:
+                raise RuntimeError('Failed to find UART device %d!' % i)
+            devices.append(device)
 
-        print(devices[0].name, devices[1].name)
 
     finally:
         # Make sure scanning is stopped before exiting.
         adapter.stop_scan()
 
     print('Connecting to device...')
-    devices[0].connect()  # Will time out after 60 seconds, specify timeout_sec parameter
-    devices[1].connect()                      # to change the timeout.
-
+    for i in range (0, numDevices):
+        devices[i].connect()
 
     # Once connected do everything else in a try/finally to make sure the device
     # is disconnected when done.
@@ -85,63 +85,47 @@ def main():
         # service and characteristic UUID lists.  Will time out after 60 seconds
         # (specify timeout_sec parameter to override).
         print('Discovering services...')
-        devices[0].discover([UART_SERVICE_UUID], [TX_CHAR_UUID, RX_CHAR_UUID])
-        devices[1].discover([UART_SERVICE_UUID], [TX_CHAR_UUID, RX_CHAR_UUID])
+        rx = []
+        tx = []
+        uart = []
 
-        # Find the UART service and its characteristics.
-        uart1 = devices[0].find_service(UART_SERVICE_UUID)
-        rx1 = uart1.find_characteristic(RX_CHAR_UUID)
-        tx1 = uart1.find_characteristic(TX_CHAR_UUID)
-
-        uart2 = devices[1].find_service(UART_SERVICE_UUID)
-        rx2 = uart2.find_characteristic(RX_CHAR_UUID)
-        tx2 = uart2.find_characteristic(TX_CHAR_UUID)
-
-        # Write a string to the TX characteristic.
-        # print('Sending message to device...')
-        #tx.write_value('Hello world!\r\n')
+        for i in range (0, numDevices):
+            devices[i].discover([UART_SERVICE_UUID], [TX_CHAR_UUID, RX_CHAR_UUID])
+            uart.append(devices[i].find_service(UART_SERVICE_UUID))
+            rx.append(uart[i].find_characteristic(RX_CHAR_UUID))
+            tx.append(uart[i].find_characteristic(TX_CHAR_UUID))
 
         # Function to receive RX characteristic changes.  Note that this will
         # be called on a different thread so be careful to make sure state that
         # the function changes is thread safe.  Use queue or other thread-safe
         # primitives to send data to other threads.
-    
+
         def received(data):
-            ints = struct.unpack('IIII', data)
-            print('Received:', ints)
-            if (ints[3] == 1):
-                print('data from 1')
-                file1 = open(filename1, "w")
-                file1.write(str(ints))
-                file1.close
-            if (ints[3] == 2):
-                print('data from 2')
-                file2 = open(filename2, "w")
-                file2.write(str(ints))
-                file2.close
+            if data is not None:
+                ints = struct.unpack('IIII', data)
+                print('Received:', ints)
+                file = open('data%d.txt' % ints[3], "w")
+                file.write(str(ints))
+                file.close
+            else:
+                print('no data!')
+
 
         # Turn on notification of RX characteristics using the callback above.
         print('Subscribing to RX characteristic changes...')
-        rx1.start_notify(received)
-        rx2.start_notify(received)
+        # rx[1].start_notify(received)
+        for i in range (0, numDevices):
+            rx[i].start_notify(received)
 
-        # Now just wait to receive data.
-        time.sleep(100000)
+        time.sleep(1000)
 
     finally:
-        # Make sure device is disconnected on exit.
-        device.disconnect()
+        print('well, got here')
 
-filename1 = "data1.txt"
-filename2 = "data2.txt"
-
-file1 = open(filename1, "w")
-file1.write('')
-file1.close
-
-file2 = open(filename1, "w")
-file2.write('')
-file2.close
+for i in range (0, numDevices):
+    file = open('data%d.txt' % i, "w")
+    file.write('')
+    file.close
 
 
 # Initialize the BLE system.  MUST be called before other BLE calls!
