@@ -57,25 +57,19 @@ def main():
         adapter.start_scan()
         # Search for the first UART device found (will time out after 60 seconds
         # but you can specify an optional timeout_sec parameter to change it).
-        found1 = None
-        found2 = None
-        devices = [0, 0]
-        devices[0] = ble.find_device(service_uuids=[UART_SERVICE_UUID], name='accelo1')
-        if devices[0] is None:
-            raise RuntimeError('Failed to find UART device 1!')
-        devices[1] = ble.find_device(service_uuids=[UART_SERVICE_UUID], name='accelo2')
-        if devices[1] is None:
-            raise RuntimeError('Failed to find UART device 2!')
+        device = ble.find_device(service_uuids=[UART_SERVICE_UUID], name='generic3')
+        if device is None:
+            raise RuntimeError('Failed to find UART device!')
 
-        print(devices[0].name, devices[1].name)
+        print(device.name)
 
     finally:
         # Make sure scanning is stopped before exiting.
         adapter.stop_scan()
 
     print('Connecting to device...')
-    devices[0].connect()  # Will time out after 60 seconds, specify timeout_sec parameter
-    devices[1].connect()                      # to change the timeout.
+    device.connect()  # Will time out after 60 seconds, specify timeout_sec parameter
+                      # to change the timeout.
 
 
     # Once connected do everything else in a try/finally to make sure the device
@@ -85,17 +79,12 @@ def main():
         # service and characteristic UUID lists.  Will time out after 60 seconds
         # (specify timeout_sec parameter to override).
         print('Discovering services...')
-        devices[0].discover([UART_SERVICE_UUID], [TX_CHAR_UUID, RX_CHAR_UUID])
-        devices[1].discover([UART_SERVICE_UUID], [TX_CHAR_UUID, RX_CHAR_UUID])
+        device.discover([UART_SERVICE_UUID], [TX_CHAR_UUID, RX_CHAR_UUID])
 
         # Find the UART service and its characteristics.
-        uart1 = devices[0].find_service(UART_SERVICE_UUID)
-        rx1 = uart1.find_characteristic(RX_CHAR_UUID)
-        tx1 = uart1.find_characteristic(TX_CHAR_UUID)
-
-        uart2 = devices[1].find_service(UART_SERVICE_UUID)
-        rx2 = uart2.find_characteristic(RX_CHAR_UUID)
-        tx2 = uart2.find_characteristic(TX_CHAR_UUID)
+        uart = device.find_service(UART_SERVICE_UUID)
+        rx = uart.find_characteristic(RX_CHAR_UUID)
+        tx = uart.find_characteristic(TX_CHAR_UUID)
 
         # Write a string to the TX characteristic.
         # print('Sending message to device...')
@@ -109,21 +98,13 @@ def main():
         def received(data):
             ints = struct.unpack('IIII', data)
             print('Received:', ints)
-            if (ints[3] == 1):
-                print('data from 1')
-                file1 = open(filename1, "w")
-                file1.write(str(ints))
-                file1.close
-            if (ints[3] == 2):
-                print('data from 2')
-                file2 = open(filename2, "w")
-                file2.write(str(ints))
-                file2.close
+            file = open(filename, "w")
+            file.write(str(ints))
+            file.close
 
         # Turn on notification of RX characteristics using the callback above.
         print('Subscribing to RX characteristic changes...')
-        rx1.start_notify(received)
-        rx2.start_notify(received)
+        rx.start_notify(received)
 
         # Now just wait to receive data.
         time.sleep(100000)
@@ -132,17 +113,11 @@ def main():
         # Make sure device is disconnected on exit.
         device.disconnect()
 
-filename1 = "data1.txt"
-filename2 = "data2.txt"
+filename = "data.txt"
 
-file1 = open(filename1, "w")
-file1.write('')
-file1.close
-
-file2 = open(filename1, "w")
-file2.write('')
-file2.close
-
+file = open(filename, "w")
+file.write('')
+file.close
 
 # Initialize the BLE system.  MUST be called before other BLE calls!
 ble.initialize()
