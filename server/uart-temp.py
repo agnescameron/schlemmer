@@ -96,10 +96,10 @@ def main():
         # primitives to send data to other threads.
     
         def received(data):
-            floats = struct.unpack('ff', data)
-            print('Received:', floats)
+            ints = struct.unpack('II', data)
+            print('Received:', ints)
             file = open(filename, "w")
-            file.write(str(floats))
+            file.write(str(ints))
             file.close
 
         # Turn on notification of RX characteristics using the callback above.
