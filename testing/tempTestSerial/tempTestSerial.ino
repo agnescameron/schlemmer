@@ -14,8 +14,17 @@ void setup(void) {
   Serial.begin(115200);
   delay(2000);
   Serial.println("Hello!");
+  Serial.println(sizeof(float));
   bleSetup();
-  tempsensor.begin();
+
+  if (! tempsensor.begin()) {
+    Serial.println("Couldnt find sensor");
+    return;
+  }
+  else {
+    Serial.print("temp:  "); Serial.print(tempsensor.readTempC()); 
+  }
+
 }
 
 void bleSetup() {
@@ -60,10 +69,12 @@ float temp;
 float id = 3.0;
 
 void sendData(){
-  int numVals = 4;
+  int numVals = 2;
   int vals[numVals];
   vals[0] = temp;
-  vals[1] = id;  
+  vals[1] = id;
+  Serial.println(temp);
+  Serial.println(id);  
   int cnt = numVals * sizeof(float) ;
   uint8_t buf[cnt];
   for (int _i=0; _i<numVals; _i++)
@@ -73,7 +84,6 @@ void sendData(){
 
 void loop(void) {
   temp = tempsensor.readTempC();
-  Serial.println(temp);
   sendData();
   delay(100);
 }
