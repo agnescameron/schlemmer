@@ -6,8 +6,6 @@ punch = wave.open("../../sounds/kung-fu/punch1.wav")
 
 chunk_size = 1024
 
-
-
 stream = p.open(format=p.get_format_from_width(punch.getsampwidth()), 
 	channels=punch.getnchannels(), rate=punch.getframerate(), output=True)
 
