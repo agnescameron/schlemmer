@@ -6,8 +6,8 @@
 BLEDis  bledis;
 BLEUart bleuart;
 BLEBas  blebas;
-BLEService generic3s = BLEService(0xABCD);
-BLECharacteristic generic3c = BLECharacteristic(0xBEEB);
+BLEService genericS = BLEService(0xABCD);
+BLECharacteristic genericC = BLECharacteristic(0xBEEB);
 Adafruit_ADT7410 tempsensor = Adafruit_ADT7410();
 
 void setup(void) {
@@ -27,10 +27,12 @@ void setup(void) {
 
 }
 
+int id = 2;
+
 void bleSetup() {
     Bluefruit.begin();
     Bluefruit.setTxPower(4);
-    Bluefruit.setName("generic3");
+    Bluefruit.setName("temp2");
     Bluefruit.setConnectCallback(connect_callback);
     Bluefruit.setDisconnectCallback(disconnect_callback);
     bledis.setManufacturer("agnes cameron");
@@ -66,7 +68,6 @@ void disconnect_callback(uint16_t conn_handle, uint8_t reason) {
 }
 
 int temp;
-int id = 3;
 
 void sendData(){
   int numVals = 2;

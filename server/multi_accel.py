@@ -32,7 +32,7 @@ RX_CHAR_UUID      = uuid.UUID('6E400003-B5A3-F393-E0A9-E50E24DCCA9E')
 ble = Adafruit_BluefruitLE.get_provider()
 
 # how many devices are you working with
-numDevices = 4
+numDevices = 1
 
 # Main function implements the program logic so it can run in a background
 # thread.  Most platforms require the main thread to handle GUI events and other
@@ -62,7 +62,7 @@ def main():
         # but you can specify an optional timeout_sec parameter to change it).
         devices = []
         for i in range (0, numDevices):
-            deviceName = 'generic%d' % i
+            deviceName = 'accelo%d' % i
             print(deviceName)
             device = ble.find_device(service_uuids=[UART_SERVICE_UUID], name=deviceName)
             if device is None:
@@ -104,7 +104,7 @@ def main():
             if data is not None:
                 ints = struct.unpack('IIII', data)
                 print('Received:', ints)
-                file = open('data%d.txt' % ints[3], "w")
+                file = open('data%d.txt' % ints[3], "a")
                 file.write(str(ints))
                 file.close
             else:
@@ -117,13 +117,13 @@ def main():
         for i in range (0, numDevices):
             rx[i].start_notify(received)
 
-        time.sleep(1000)
+        time.sleep(30)
 
     finally:
         print('well, got here')
 
 for i in range (0, numDevices):
-    file = open('data%d.txt' % i, "w")
+    file = open('accelo-flow-data%d.txt' % i, "w")
     file.write('')
     file.close
 

@@ -6,8 +6,8 @@
 BLEDis  bledis;
 BLEUart bleuart;
 BLEBas  blebas;
-BLEService accelo0s = BLEService(0xABCD);
-BLECharacteristic accelo0c = BLECharacteristic(0xBEEB);
+BLEService acceloS = BLEService(0xABCD);
+BLECharacteristic acceloC = BLECharacteristic(0xBEEB);
 
 Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 

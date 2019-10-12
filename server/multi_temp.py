@@ -104,7 +104,7 @@ def main():
             if data is not None:
                 ints = struct.unpack('II', data)
                 print('Received:', ints)
-                file = open('data%d.txt' % ints[1], "w")
+                file = open('data%d.txt' % ints[1], "a")
                 file.write(str(ints))
                 file.close
             else:
@@ -117,7 +117,7 @@ def main():
         for i in range (0, numDevices):
             rx[i].start_notify(received)
 
-        time.sleep(1000)
+        time.sleep(20)
 
     finally:
         print('well, got here')
