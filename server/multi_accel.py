@@ -104,8 +104,8 @@ def main():
             if data is not None:
                 ints = struct.unpack('IIII', data)
                 print('Received:', ints)
-                file = open('accelo-flow-data%d.txt' % ints[3], "a")
-                file.write("%s %s %s %s\n" % (ints[0], ints[1], ints[2], randrange(5)))
+                file = open('accelo-live%d.txt' % ints[3], "w")
+                file.write("%s %s %s %s\n" % (ints[0], ints[1], ints[2], randrange(5))) #, randrange(5)
                 file.close
             else:
                 print('no data!')
@@ -117,13 +117,13 @@ def main():
         for i in range (0, numDevices):
             rx[i].start_notify(received)
 
-        time.sleep(30)
+        time.sleep(3000)
 
     finally:
         print('well, got here')
 
 for i in range (0, numDevices):
-    file = open('accelo-flow-data%d.txt' % i, "w")
+    file = open('accelo-live%d.txt' % i, "w")
     file.write('')
     file.close
 

@@ -75,9 +75,9 @@ int id = 1;
 void sendData(){
   int numVals = 4;
   int vals[numVals];
-  vals[0] = xval;
-  vals[1] = yval;
-  vals[2] = zval;
+  vals[0] = abs(xval);
+  vals[1] = abs(yval);
+  vals[2] = abs(zval);
   vals[3] = id;  
   int cnt = numVals * sizeof(int) ;
   uint8_t buf[cnt];
@@ -87,7 +87,12 @@ void sendData(){
 }
 
 void loop(void) {
-  lis.read();      // get X Y and Z data at once
+  lis.read();
+  Serial.print("X:  "); Serial.print(lis.x); 
+  Serial.print("  \tY:  "); Serial.print(lis.y); 
+  Serial.print("  \tZ:  "); Serial.print(lis.z); 
+  Serial.println("");
+  // get X Y and Z data at once
   xval = lis.x;
   yval = lis.y;
   zval = lis.z;
