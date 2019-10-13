@@ -8,6 +8,7 @@ import logging
 import time
 import uuid
 import struct
+from random import randrange
 # from chunnel import Socket
 
 import Adafruit_BluefruitLE
@@ -18,7 +19,6 @@ import os
 
 from Queue import Queue
 from threading import Thread
-
 
 # Enable debug output.
 #logging.basicConfig(level=logging.DEBUG)
@@ -104,8 +104,8 @@ def main():
             if data is not None:
                 ints = struct.unpack('IIII', data)
                 print('Received:', ints)
-                file = open('data%d.txt' % ints[3], "a")
-                file.write(str(ints))
+                file = open('accelo-flow-data%d.txt' % ints[3], "a")
+                file.write("%s %s %s %s\n" % (ints[0], ints[1], ints[2], randrange(5)))
                 file.close
             else:
                 print('no data!')
