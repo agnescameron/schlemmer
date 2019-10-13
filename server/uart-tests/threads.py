@@ -16,21 +16,41 @@ drum4 = pg.mixer.Sound("../../sounds/japanese-percussion/taiko.wav")
 drum2 = pg.mixer.Sound("../../sounds/japanese-percussion/hyoshigi.wav")
 drum3 = pg.mixer.Sound("../../sounds/japanese-percussion/kagura.wav")
 drum0 = pg.mixer.Sound("../../sounds/japanese-percussion/tsuzumi.wav")
-drums = [drum0, drum1, drum2, drum3, drum4]
+drums = [drum0] #, drum1, drum2, drum3, drum4]
 sleep = [1, 1, 1, 1, 1]
 
 def printFile(arg):
-	file = open("../accelo-flow-data1.txt", 'r')
-	for line in file:
-		data = line.split()
-		sleep[int(data[3])] = math.sqrt( int(data[0])**2 + int(data[1])**2 + int(data[2])**2 )
-		time.sleep(0.05)
+	while True:
+		file = open("../accelo-live1.txt", 'r')
+		for line in file:
+			data = line.split()
+			if(len(data) == 4):
+				print(data)
+				print(len(data))
+				sleep[int(data[3])] = math.sqrt( int(data[0])**2 + int(data[1])**2 + int(data[2])**2 )
+			time.sleep(0.05)
+		file.close()
 
 def channel(num, pause):
 	while True:
 		drums[num].play()
-		print(sleep[num])
-		time.sleep(num+0.2)
+		print(num)
+		if(sleep[num]<4000000000):
+			sleepTime = 0.2
+
+		elif(sleep[num] < 5000000000):
+			sleepTime = 0.8
+
+		elif(sleep[num] < 6000000000):
+			sleepTime=1.2
+		
+		elif(sleep[num] < 7000000000):
+			sleepTime=1.8
+
+		else:
+			sleepTime=2.8
+
+		time.sleep(sleepTime)
 
 if __name__ == "__main__":
 
