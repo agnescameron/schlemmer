@@ -8,7 +8,6 @@ import re
 pg.mixer.init()
 pg.init()
 pg.mixer.set_num_channels(50)
-lastnorm = 0
 
 
 drum1 = pg.mixer.Sound("../../sounds/japanese-percussion/biz.wav")
@@ -18,9 +17,10 @@ drum3 = pg.mixer.Sound("../../sounds/japanese-percussion/kagura.wav")
 drum0 = pg.mixer.Sound("../../sounds/japanese-percussion/tsuzumi.wav")
 drums = [drum0]#, drum0, drum0, drum0, drum0] #[drum0, drum1, drum2, drum3, drum4]
 sleep = [1, 1, 1, 1, 1]
+global lastnorm
 
 def thresholdAll(data):
-	norm = abs(math.sqrt( int(data[0])**2 + int(data[1])**2 + int(data[2])**2 )-15000)
+	norm = abs(math.sqrt( int(data[0])**2 + int(data[1])**2 + int(data[2])**2 )-16000)
 	print (norm)
 
 	if(norm > 100000):
@@ -28,10 +28,10 @@ def thresholdAll(data):
 
 	else:
 		if(norm < 1000):
-			sleepTime = 2
+			sleepTime = 3
 
 		elif(norm < 2500):
-			sleepTime = 1.2
+			sleepTime = 1.4
 
 		elif(norm < 5000):
 			sleepTime= 1
@@ -49,60 +49,34 @@ def thresholdAll(data):
 
 
 def compare(data):
-	norm = abs(math.sqrt( int(data[0])**2 + int(data[1])**2 + int(data[2])**2 )-9.8)
-	print (norm)
+	global lastnorm
+	norm = abs(math.sqrt( int(data[0])**2 + int(data[1])**2 + int(data[2])**2 )-16000)
+	compNorm = abs(lastnorm - norm)
+	print(compNorm)
 
-	if(norm > 100000):
+	if (compNorm == 0.0):
 		sleepTime = sleep[int(data[3])]
 
 	else:
-		if(norm < 1000):
-			sleepTime = 2
+		if(compNorm < 300):
+			sleepTime = 3
 
-		elif(norm < 2500):
-			sleepTime = 1.2
+		elif(compNorm < 500):
+			sleepTime = 1.4
 
-		elif(norm < 5000):
+		elif(compNorm < 1000):
 			sleepTime= 1
 		
-		elif(norm < 1000):
+		elif(compNorm < 5000):
 			sleepTime=0.8
 			
-		elif(norm < 15000):
+		elif(compNorm < 10000):
 			sleepTime=0.4
 
 		else:
 			sleepTime=0.2
 
-	return sleepTime
-
-
-def movingAv(data):
-	norm = abs(math.sqrt( int(data[0])**2 + int(data[1])**2 + int(data[2])**2 )-6073989301)
-	print (norm)
-
-	if(norm > 100000):
-		sleepTime = sleep[int(data[3])]
-
-	else:
-		if(norm < 1000):
-			sleepTime = 2
-
-		elif(norm < 5000):
-			sleepTime = 1.2
-
-		elif(norm < 12000):
-			sleepTime= 1
-		
-		elif(norm < 25000):
-			sleepTime=0.8
-			
-		elif(norm < 50000):
-			sleepTime=0.4
-
-		else:
-			sleepTime=0.2
-
+	lastnorm = norm
 	return sleepTime
 
 
@@ -112,7 +86,7 @@ def printFile(arg):
 		for line in file:
 			data = line.split()
 			if(len(data) == 4):
-				sleep[int(data[3])] = thresholdAll(data)
+				sleep[int(data[3])] = compare(data)
 			time.sleep(0.05)
 		file.close()
 
@@ -122,7 +96,7 @@ def channel(num, pause):
 		time.sleep(sleep[num])
 
 if __name__ == "__main__":
-
+	lastnorm = 0
 	thread = threading.Thread(target=printFile, args=(0, ))
 	thread.start()
 
