@@ -5,15 +5,19 @@ import math
 import time
 import re
 
-pg.mixer.init()
+numSounds = 6
+
+pg.mixer.init(frequency=44100, size=-16, channels=numSounds, buffer=4096)
 pg.init()
-pg.mixer.set_num_channels(1)
+pg.mixer.set_num_channels(5)
 
 drones = []
 buffer = [0]*20
 
-for i in range(0, 5):
-	drone = pg.mixer.Sound("../../sounds/drones/%d.wav" %i)
+
+#good is drones, drills;
+for i in range(0, numSounds):
+	drone = pg.mixer.Sound("../../sounds/drills/%d.wav" %i)
 	drones.append(drone)
 
 vol = [0.1, 0.1, 0.1, 0.1, 0.1]
@@ -52,20 +56,20 @@ def moving_average(data, bufSize):
 	avBuffer = buffer[-bufSize:]
 	movingAv = sum(avBuffer)/bufSize
 	print(movingAv)
-	return movingAv/2000
+	return movingAv/3000
 
 
-def printFile(arg):
+def printFile():
 	while True:
-		file = open("../accelo-live1.txt", 'r')
+		file = open("../accelo-live.txt", 'r')
 		for line in file:
 			data = line.split()
 			if(len(data) == 4):
-				vol[int(data[3])] = moving_average(data, 50)
+				vol[int(data[3])] = moving_average(data, 60)
 			time.sleep(0.05)
 		file.close()
 
-def channel(num, pause):
+def channel(num):
 	while True:
 		drones[num].set_volume(vol[num])
 		print(vol[num])
@@ -73,9 +77,9 @@ def channel(num, pause):
 
 if __name__ == "__main__":
 	lastnorm = 0
-	thread = threading.Thread(target=printFile, args=(0, ))
+	thread = threading.Thread(target=printFile)
 	thread.start()
 
 	for i in range (0, len(drones)):
-		thread = threading.Thread(target=channel, args=(i, i))
+		thread = threading.Thread(target=channel, args=(i, ))
 		thread.start()
