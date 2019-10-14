@@ -5,18 +5,21 @@ import math
 import time
 import re
 
-pg.mixer.init()
+
+numSounds = 5
+drums = []
+
+pg.mixer.init(frequency=44100, size=-16, channels=numSounds, buffer=4096)
+# pg.mixer.init()
 pg.init()
-pg.mixer.set_num_channels(50)
 
 
-drum1 = pg.mixer.Sound("../../sounds/japanese-percussion/biz.wav")
-drum4 = pg.mixer.Sound("../../sounds/japanese-percussion/taiko.wav")
-drum2 = pg.mixer.Sound("../../sounds/japanese-percussion/hyoshigi.wav")
-drum3 = pg.mixer.Sound("../../sounds/japanese-percussion/kagura.wav")
-drum0 = pg.mixer.Sound("../../sounds/japanese-percussion/tsuzumi.wav")
-drums = [drum0]#, drum0, drum0, drum0, drum0] #[drum0, drum1, drum2, drum3, drum4]
-sleep = [1, 1, 1, 1, 1]
+#good is drones, drills;
+for i in range(0, numSounds):
+	drum = pg.mixer.Sound("../../sounds/japanese-percussion/%d.wav" %i)
+	drums.append(drum)
+
+sleep = [1]*numSounds
 global lastnorm
 
 def thresholdAll(data):
@@ -82,7 +85,7 @@ def compare(data):
 
 def printFile(arg):
 	while True:
-		file = open("../accelo-live1.txt", 'r')
+		file = open("../accelo-live.txt", 'r')
 		for line in file:
 			data = line.split()
 			if(len(data) == 4):

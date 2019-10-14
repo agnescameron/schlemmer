@@ -17,7 +17,7 @@ for i in range(0, numSounds):
 	drum = pg.mixer.Sound("../../sounds/smashing/%d.wav" %i)
 	drums.append(drum)
 
-event = [0] * numSounds
+event = [1] * numSounds
 global lastnorm
 
 def threshold(data):
