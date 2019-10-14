@@ -31,10 +31,12 @@ void setup(void) {
   }
 }
 
+int id = 1;
+
 void bleSetup() {
     Bluefruit.begin();
     Bluefruit.setTxPower(4);
-    Bluefruit.setName("accelo0");
+    Bluefruit.setName("accelo1");
     Bluefruit.setConnectCallback(connect_callback);
     Bluefruit.setDisconnectCallback(disconnect_callback);
     bledis.setManufacturer("agnes cameron");
@@ -70,7 +72,6 @@ void disconnect_callback(uint16_t conn_handle, uint8_t reason) {
 }
 
 int xval, yval, zval;
-int id = 1;
 
 void sendData(){
   int numVals = 4;
@@ -91,6 +92,7 @@ void loop(void) {
   Serial.print("X:  "); Serial.print(lis.x); 
   Serial.print("  \tY:  "); Serial.print(lis.y); 
   Serial.print("  \tZ:  "); Serial.print(lis.z); 
+  Serial.print("  \tid:  "); Serial.print(id);   
   Serial.println("");
   // get X Y and Z data at once
   xval = lis.x;

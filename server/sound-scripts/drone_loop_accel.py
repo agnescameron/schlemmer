@@ -9,7 +9,6 @@ numSounds = 6
 
 pg.mixer.init(frequency=44100, size=-16, channels=numSounds, buffer=4096)
 pg.init()
-pg.mixer.set_num_channels(5)
 
 drones = []
 buffer = [0]*20

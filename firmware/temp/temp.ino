@@ -6,8 +6,8 @@
 BLEDis  bledis;
 BLEUart bleuart;
 BLEBas  blebas;
-BLEService genericS = BLEService(0xABCD);
-BLECharacteristic genericC = BLECharacteristic(0xBEEB);
+BLEService tempS = BLEService(0xABCD);
+BLECharacteristic tempC = BLECharacteristic(0xBEEB);
 Adafruit_ADT7410 tempsensor = Adafruit_ADT7410();
 
 void setup(void) {

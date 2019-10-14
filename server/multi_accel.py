@@ -32,7 +32,7 @@ RX_CHAR_UUID      = uuid.UUID('6E400003-B5A3-F393-E0A9-E50E24DCCA9E')
 ble = Adafruit_BluefruitLE.get_provider()
 
 # how many devices are you working with
-numDevices = 1
+numDevices = 4
 
 # Main function implements the program logic so it can run in a background
 # thread.  Most platforms require the main thread to handle GUI events and other
@@ -104,8 +104,8 @@ def main():
             if data is not None:
                 ints = struct.unpack('IIII', data)
                 print('Received:', ints)
-                file = open('accelo-live%d.txt' % ints[3], "w")
-                file.write("%s %s %s %s\n" % (ints[0], ints[1], ints[2], randrange(5))) #, randrange(5)
+                file = open('accelo-live.txt', "w")
+                file.write("%s %s %s %s\n" % (ints[0], ints[1], ints[2], ints[3])) #, randrange(5)
                 file.close
             else:
                 print('no data!')
@@ -122,10 +122,9 @@ def main():
     finally:
         print('well, got here')
 
-for i in range (0, numDevices):
-    file = open('accelo-live%d.txt' % i, "w")
-    file.write('')
-    file.close
+file = open('accelo-live.txt', "w")
+file.write('')
+file.close
 
 
 # Initialize the BLE system.  MUST be called before other BLE calls!

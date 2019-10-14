@@ -14,7 +14,7 @@ pg.init()
 
 #good is drones, drills;
 for i in range(0, numSounds):
-	drum = pg.mixer.Sound("../../sounds/smashing/%d.wav" %i)
+	drum = pg.mixer.Sound("../../sounds/kung-fu/%d.wav" %i)
 	drums.append(drum)
 
 event = [1] * numSounds
@@ -38,7 +38,7 @@ def printFile(arg):
 			data = line.split()
 			if(len(data) == 4):
 				event[int(data[3])] = compare(data)
-			time.sleep(0.1)
+			time.sleep(0.01)
 		file.close()
 
 def channel(num, pause):

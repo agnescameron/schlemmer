@@ -9,7 +9,7 @@ import re
 numSounds = 5
 drums = []
 
-pg.mixer.init(frequency=44100, size=-16, channels=numSounds, buffer=4096)
+pg.mixer.init(frequency=88200, size=-16, channels=numSounds, buffer=4096)
 # pg.mixer.init()
 pg.init()
 
