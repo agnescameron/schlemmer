@@ -32,7 +32,7 @@ RX_CHAR_UUID      = uuid.UUID('6E400003-B5A3-F393-E0A9-E50E24DCCA9E')
 ble = Adafruit_BluefruitLE.get_provider()
 
 # how many devices are you working with
-numDevices = 3
+numDevices = 1
 
 # Main function implements the program logic so it can run in a background
 # thread.  Most platforms require the main thread to handle GUI events and other
@@ -104,8 +104,8 @@ def main():
             if data is not None:
                 ints = struct.unpack('II', data)
                 print('Received:', ints)
-                file = open('data%d.txt' % ints[1], "w")
-                file.write(str(ints))
+                file = open('flex-live.txt', "w")
+                file.write("%s %s\n" % (ints[0], ints[1]))
                 file.close
             else:
                 print('no data!')
@@ -117,13 +117,13 @@ def main():
         for i in range (0, numDevices):
             rx[i].start_notify(received)
 
-        time.sleep(1000)
+        time.sleep(3000)
 
     finally:
         print('well, got here')
 
 for i in range (0, numDevices):
-    file = open('data%d.txt' % i, "w")
+    file = open('flex-live.txt', "w")
     file.write('')
     file.close
 
