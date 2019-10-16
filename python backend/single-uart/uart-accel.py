@@ -57,7 +57,7 @@ def main():
         adapter.start_scan()
         # Search for the first UART device found (will time out after 60 seconds
         # but you can specify an optional timeout_sec parameter to change it).
-        device = ble.find_device(service_uuids=[UART_SERVICE_UUID], name='accelo3')
+        device = ble.find_device(service_uuids=[UART_SERVICE_UUID], name='accelo0')
         if device is None:
             raise RuntimeError('Failed to find UART device!')
 
