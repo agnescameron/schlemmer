@@ -2,7 +2,7 @@
 #include <bluefruit.h>
 
 //analog in
-int adcin    = A0;
+int adcin = A0;
 float mv_per_lsb = 3600.0F/1024.0F; // 10-bit ADC with 3.6V input range
 
 // BLE Service
@@ -74,6 +74,7 @@ void sendData(){
 
 void loop() {
   adcvalue = analogRead(adcin);
+  Serial.println(adcvalue);
   sendData();
   delay(100);
 }

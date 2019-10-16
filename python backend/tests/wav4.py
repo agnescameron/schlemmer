@@ -18,13 +18,6 @@ drums = [drum0, drum1, drum2, drum3, drum4]
 pg.mixer.set_num_channels(50)
 channel0 = pg.mixer.Channel(0) # argument must be int
 channel1 = pg.mixer.Channel(1)
-channel2 = pg.mixer.Channel(2)
-channel3 = pg.mixer.Channel(3)
-channel4 = pg.mixer.Channel(4)
-
-
-while True:
-	channel0.play(drums[0])
 	channel1.play(drums[1])
 	channel2.play(drums[2])
 	channel3.play(drums[3])

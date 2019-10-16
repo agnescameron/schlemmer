@@ -8,6 +8,7 @@ import logging
 import time
 import uuid
 import struct
+from random import randrange
 # from chunnel import Socket
 
 import Adafruit_BluefruitLE
@@ -16,8 +17,8 @@ import socket
 import sys
 import os
 
-server_address = './uds_socket'
-
+from Queue import Queue
+from threading import Thread
 
 # Enable debug output.
 #logging.basicConfig(level=logging.DEBUG)
@@ -30,6 +31,8 @@ RX_CHAR_UUID      = uuid.UUID('6E400003-B5A3-F393-E0A9-E50E24DCCA9E')
 # Get the BLE provider for the current platform.
 ble = Adafruit_BluefruitLE.get_provider()
 
+# how many devices are you working with
+numDevices = 2
 
 # Main function implements the program logic so it can run in a background
 # thread.  Most platforms require the main thread to handle GUI events and other
@@ -57,20 +60,23 @@ def main():
         adapter.start_scan()
         # Search for the first UART device found (will time out after 60 seconds
         # but you can specify an optional timeout_sec parameter to change it).
-        device = ble.find_device(service_uuids=[UART_SERVICE_UUID], name='generic3')
-        if device is None:
-            raise RuntimeError('Failed to find UART device!')
+        devices = []
+        for i in range (0, numDevices):
+            deviceName = 'accelo%d' % i
+            print(deviceName)
+            device = ble.find_device(service_uuids=[UART_SERVICE_UUID], name=deviceName)
+            if device is None:
+                raise RuntimeError('Failed to find UART device %d!' % i)
+            devices.append(device)
 
-        print(device.name)
 
     finally:
         # Make sure scanning is stopped before exiting.
         adapter.stop_scan()
 
     print('Connecting to device...')
-    device.connect()  # Will time out after 60 seconds, specify timeout_sec parameter
-                      # to change the timeout.
-
+    for i in range (0, numDevices):
+        devices[i].connect()
 
     # Once connected do everything else in a try/finally to make sure the device
     # is disconnected when done.
@@ -79,45 +85,47 @@ def main():
         # service and characteristic UUID lists.  Will time out after 60 seconds
         # (specify timeout_sec parameter to override).
         print('Discovering services...')
-        device.discover([UART_SERVICE_UUID], [TX_CHAR_UUID, RX_CHAR_UUID])
+        rx = []
+        tx = []
+        uart = []
 
-        # Find the UART service and its characteristics.
-        uart = device.find_service(UART_SERVICE_UUID)
-        rx = uart.find_characteristic(RX_CHAR_UUID)
-        tx = uart.find_characteristic(TX_CHAR_UUID)
-
-        # Write a string to the TX characteristic.
-        # print('Sending message to device...')
-        #tx.write_value('Hello world!\r\n')
+        for i in range (0, numDevices):
+            devices[i].discover([UART_SERVICE_UUID], [TX_CHAR_UUID, RX_CHAR_UUID])
+            uart.append(devices[i].find_service(UART_SERVICE_UUID))
+            rx.append(uart[i].find_characteristic(RX_CHAR_UUID))
+            tx.append(uart[i].find_characteristic(TX_CHAR_UUID))
 
         # Function to receive RX characteristic changes.  Note that this will
         # be called on a different thread so be careful to make sure state that
         # the function changes is thread safe.  Use queue or other thread-safe
         # primitives to send data to other threads.
-    
+
         def received(data):
-            ints = struct.unpack('IIII', data)
-            print('Received:', ints)
-            file = open(filename, "w")
-            file.write(str(ints))
-            file.close
+            if data is not None:
+                ints = struct.unpack('IIII', data)
+                print('Received:', ints)
+                file = open('../accelo-live.txt', "w")
+                file.write("%s %s %s %s\n" % (ints[0], ints[1], ints[2], ints[3])) #, randrange(5)
+                file.close
+            else:
+                print('no data!')
+
 
         # Turn on notification of RX characteristics using the callback above.
         print('Subscribing to RX characteristic changes...')
-        rx.start_notify(received)
+        # rx[1].start_notify(received)
+        for i in range (0, numDevices):
+            rx[i].start_notify(received)
 
-        # Now just wait to receive data.
-        time.sleep(100000)
+        time.sleep(3000)
 
     finally:
-        # Make sure device is disconnected on exit.
-        device.disconnect()
+        print('well, got here')
 
-filename = "data.txt"
-
-file = open(filename, "w")
+file = open('../accelo-live.txt', "w")
 file.write('')
 file.close
+
 
 # Initialize the BLE system.  MUST be called before other BLE calls!
 ble.initialize()

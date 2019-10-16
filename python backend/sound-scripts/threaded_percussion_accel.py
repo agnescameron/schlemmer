@@ -6,7 +6,7 @@ import time
 import re
 
 
-numSounds = 5
+numSounds = 2
 drums = []
 
 pg.mixer.init(frequency=88200, size=-16, channels=numSounds, buffer=4096)
@@ -16,7 +16,7 @@ pg.init()
 
 #good is drones, drills;
 for i in range(0, numSounds):
-	drum = pg.mixer.Sound("../../sounds/japanese-percussion/%d.wav" %i)
+	drum = pg.mixer.Sound("../../sounds/percussion/%d.wav" %i)
 	drums.append(drum)
 
 sleep = [1]*numSounds
@@ -89,13 +89,13 @@ def printFile(arg):
 		for line in file:
 			data = line.split()
 			if(len(data) == 4):
-				sleep[int(data[3])] = compare(data)
+				if (int(data[3]) == 1): sleep[1] = compare(data)
 			time.sleep(0.05)
 		file.close()
 
 def channel(num, pause):
 	while True:
-		drums[num].play()
+		if(num==1): drums[num].play()
 		time.sleep(sleep[num])
 
 if __name__ == "__main__":

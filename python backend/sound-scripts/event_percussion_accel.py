@@ -14,7 +14,7 @@ pg.init()
 
 #good is drones, drills;
 for i in range(0, numSounds):
-	drum = pg.mixer.Sound("../../sounds/kung-fu/%d.wav" %i)
+	drum = pg.mixer.Sound("../../sounds/japanese-percussion/%d.wav" %i)
 	drums.append(drum)
 
 event = [1] * numSounds
@@ -22,6 +22,7 @@ global lastnorm
 
 def threshold(data):
 	norm = abs(math.sqrt( int(data[0])**2 + int(data[1])**2 + int(data[2])**2 )-16000)
+	print(norm)
 	return norm
 
 def compare(data):
@@ -37,15 +38,15 @@ def printFile(arg):
 		for line in file:
 			data = line.split()
 			if(len(data) == 4):
-				event[int(data[3])] = compare(data)
+				event[int(data[3])] = threshold(data)
 			time.sleep(0.01)
 		file.close()
 
 def channel(num, pause):
 	while True:
-		if(event[num]>6000):
+		if(event[num]>8000):
 			drums[num].play()
-			time.sleep(0.2)			
+			time.sleep(2)		
 
 if __name__ == "__main__":
 	lastnorm = 0

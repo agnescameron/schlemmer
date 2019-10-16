@@ -104,7 +104,7 @@ def main():
             if data is not None:
                 ints = struct.unpack('II', data)
                 print('Received:', ints)
-                file = open('flex-live.txt', "w")
+                file = open('../flex-live.txt', "w")
                 file.write("%s %s\n" % (ints[0], ints[1]))
                 file.close
             else:
@@ -123,7 +123,7 @@ def main():
         print('well, got here')
 
 for i in range (0, numDevices):
-    file = open('flex-live.txt', "w")
+    file = open('../flex-live.txt', "w")
     file.write('')
     file.close
 

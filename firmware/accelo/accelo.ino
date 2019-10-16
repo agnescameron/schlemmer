@@ -31,12 +31,12 @@ void setup(void) {
   }
 }
 
-int id = 1;
+int id = 5;
 
 void bleSetup() {
     Bluefruit.begin();
     Bluefruit.setTxPower(4);
-    Bluefruit.setName("accelo1");
+    Bluefruit.setName("accelo5");
     Bluefruit.setConnectCallback(connect_callback);
     Bluefruit.setDisconnectCallback(disconnect_callback);
     bledis.setManufacturer("agnes cameron");
