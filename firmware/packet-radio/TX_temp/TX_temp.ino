@@ -34,13 +34,11 @@ int id = 0;
 void setup() 
 {
   Serial.begin(115200);
-  //while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
-
-  pinMode(LED, OUTPUT);     
+  pinMode(LED, OUTPUT); 
   pinMode(RFM69_RST, OUTPUT);
   digitalWrite(RFM69_RST, LOW);
 
-  Serial.println("Feather RFM69 ooo TX accelerometer");
+  Serial.println("RFM69 TX temperature");
   Serial.println();
   
   //set up temp sensor
@@ -83,8 +81,9 @@ int temp;
 void loop() {
   delay(1000);  // Wait 1 second between transmits, could also 'sleep' here!
 
- char radiopacket[4];
-  itoa(temp, radiopacket, 10);
+ char radiopacket[5];
+  itoa(id, radiopacket, 10);
+  itoa(temp, radiopacket+1, 10);
   Serial.print("Sending "); Serial.println(radiopacket);
   
   // Send a message!
