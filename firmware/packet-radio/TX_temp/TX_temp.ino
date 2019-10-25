@@ -90,37 +90,10 @@ void loop() {
   // Send a message!
   rf69.send((uint8_t *)radiopacket, strlen(radiopacket));
   rf69.waitPacketSent();
-
-  // Now wait for a reply
-//  uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
-//  uint8_t len = sizeof(buf);
-
-//
-//  if (rf69.waitAvailableTimeout(500))  { 
-//    // Should be a reply message for us now   
-//    if (rf69.recv(buf, &len)) {
-//      Serial.print("Got a reply: ");
-//      Serial.println((char*)buf);
-//      Blink(LED, 50, 3); //blink LED 3 times, 50ms between blinks
-//    } else {
-//      Serial.println("Receive failed");
-//    }
-//  } else {
-//    Serial.println("No reply, is another RFM69 listening?");
-//  }
 }
 
 
 void readTemp() {
   float tempFloat = tempsensor.readTempC();
   temp = round(tempFloat*100.00); 
-}
-
-void Blink(byte PIN, byte DELAY_MS, byte loops) {
-  for (byte i=0; i<loops; i++)  {
-    digitalWrite(PIN,HIGH);
-    delay(DELAY_MS);
-    digitalWrite(PIN,LOW);
-    delay(DELAY_MS);
-  }
 }

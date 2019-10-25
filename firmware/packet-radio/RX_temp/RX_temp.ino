@@ -82,22 +82,8 @@ void loop() {
       Serial.print("Received: ");
       Serial.println((char*)buf);
 
-//      uint8_t data[] = "thanx";
-//      rf69.send(data, sizeof(data));
-//      rf69.waitPacketSent();
-      //Blink(LED, 40, 3); //blink LED 3 times, 40ms between blinks
     } else {
       Serial.println("Receive failed");
     }
-  }
-}
-
-
-void Blink(byte PIN, byte DELAY_MS, byte loops) {
-  for (byte i=0; i<loops; i++)  {
-    digitalWrite(PIN,HIGH);
-    delay(DELAY_MS);
-    digitalWrite(PIN,LOW);
-    delay(DELAY_MS);
   }
 }
