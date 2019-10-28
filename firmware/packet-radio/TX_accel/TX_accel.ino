@@ -34,7 +34,7 @@ int id = 0;
 void setup() 
 {
   Serial.begin(115200);
-  while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
+  //while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
   
   pinMode(LED, OUTPUT); 
   pinMode(RFM69_RST, OUTPUT);
@@ -88,10 +88,6 @@ void loop() {
   readTemp();
 
  char radiopacket[20];
-//  itoa(id, radiopacket, 10);
-//  itoa(xval, radiopacket+1, 10);
-//  itoa(yval, radiopacket+6, 10);    
-//  itoa(zval, radiopacket+11, 10);
   snprintf ( radiopacket, 20, "%d %d %d %d", id, xval, yval, zval );
   Serial.print("Sending "); Serial.println(radiopacket); Serial.println(strlen(radiopacket));
   
