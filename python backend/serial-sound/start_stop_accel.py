@@ -28,7 +28,7 @@ norm = [1]*numSounds
 global lastnorm
 
 def threshold(data):
-	norm = abs(math.sqrt( int(data[0])**2 + int(data[1])**2 + int(data[2])**2 )-16000)
+	norm = abs(math.sqrt( int(data[1])**2 + int(data[2])**2 + int(data[3])**2 )-16000)
 	# print (norm)
 
 	if(norm > 100000):
@@ -41,8 +41,6 @@ def printFile():
 	while True:
 		line = ser.readline().decode("utf-8")
 		data = line.split();
-		vals = data[1:]
-		idNum = data[:1]
 		print(data)
 		if(len(data) == 4):
 			norm[int(data[0])] = threshold(data)
