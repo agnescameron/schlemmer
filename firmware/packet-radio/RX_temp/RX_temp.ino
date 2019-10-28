@@ -29,7 +29,7 @@ int16_t packetnum = 0;  // packet counter, we increment per xmission
 void setup() 
 {
   Serial.begin(115200);
-  //while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
+  while (!Serial) { delay(1); } // wait until serial console is open, remove if not tethered to computer
 
   pinMode(LED, OUTPUT);     
   pinMode(RFM69_RST, OUTPUT);
@@ -79,7 +79,6 @@ void loop() {
     if (rf69.recv(buf, &len)) {
       if (!len) return;
       buf[len] = 0;
-      Serial.print("Received: ");
       Serial.println((char*)buf);
 
     } else {
