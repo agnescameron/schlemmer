@@ -82,10 +82,10 @@ void loop() {
   delay(10);  // Wait 0.01 second between transmits, could also 'sleep' here!
   readTemp();
 
- char radiopacket[5];
-  itoa(id, radiopacket, 10);
-  itoa(temp, radiopacket+1, 10);
-  Serial.print("Sending "); Serial.println(radiopacket);
+  char radiopacket[10];
+  snprintf ( radiopacket, 10, "%d %d", id, temp );
+  Serial.print("Sending "); 
+  Serial.println(radiopacket);
   
   // Send a message!
   rf69.send((uint8_t *)radiopacket, strlen(radiopacket));

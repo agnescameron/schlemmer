@@ -87,7 +87,7 @@ void loop() {
   delay(10);  // Wait 0.01 second between transmits, could also 'sleep' here!
   readTemp();
 
- char radiopacket[20];
+  char radiopacket[20];
   snprintf ( radiopacket, 20, "%d %d %d %d", id, xval, yval, zval );
   Serial.print("Sending "); Serial.println(radiopacket); Serial.println(strlen(radiopacket));
   
@@ -102,9 +102,4 @@ void readTemp() {
   xval = abs(lis.x);
   yval = abs(lis.y);
   zval = abs(lis.z);
-
-  Serial.print("Accel:  ");
-  Serial.print(xval); Serial.print("  ");
-  Serial.print(yval);  Serial.print("  ");
-  Serial.println(zval);   Serial.print("  ");
 }
