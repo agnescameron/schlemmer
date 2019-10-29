@@ -5,7 +5,7 @@ import time
 import re
 import serial
 
-numSounds = 1
+numSounds = 3
 ser = serial.Serial('/dev/cu.usbmodem1421', 115200)
 
 
@@ -18,7 +18,7 @@ buffer = [0]*20
 
 #good is drones, drills;
 for i in range(0, numSounds):
-	drone = pg.mixer.Sound("../../sounds/rehearsal-test/1.wav")
+	drone = pg.mixer.Sound("../../sounds/rehearsal-test/%d.wav" %i)
 	drones.append(drone)
 
 vol = [0.1, 0.1, 0.1, 0.1, 0.1]
@@ -74,7 +74,7 @@ def moving_average(data, bufSize):
 # 	return movingAv/6000
 
 
-def printFile():
+def getSerial():
 	while True:
 		line = ser.readline().decode("utf-8")
 		data = line.split();
@@ -92,7 +92,7 @@ def channel(num):
 
 if __name__ == "__main__":
 	lastnorm = 0
-	thread = threading.Thread(target=printFile)
+	thread = threading.Thread(target=getSerial)
 	thread.start()
 
 	for i in range (0, numSounds):

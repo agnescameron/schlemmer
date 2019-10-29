@@ -5,7 +5,7 @@ import time
 import serial
 import re
 
-numSounds = 1
+numSounds = 3
 
 ser = serial.Serial('/dev/cu.usbmodem1421', 115200)
 
@@ -21,7 +21,7 @@ buffer = [0]*20
 for i in range(0, numSounds):
 	channel = pg.mixer.Channel(i)
 	channels.append(channel)
-	drone = pg.mixer.Sound("../../../sounds/rehearsal-test/1.wav")
+	drone = pg.mixer.Sound("../../sounds/rehearsal-test/1.wav")
 	drones.append(drone)
 
 norm = [1]*numSounds
@@ -37,8 +37,9 @@ def threshold(data):
 	return norm
 
 
-def printFile():
+def getSerial():
 	while True:
+		ser.flushInput()		
 		line = ser.readline().decode("utf-8")
 		data = line.split();
 		print(data)
@@ -65,7 +66,7 @@ def channel(num):
 
 if __name__ == "__main__":
 	lastnorm = 0
-	thread = threading.Thread(target=printFile)
+	thread = threading.Thread(target=getSerial)
 	thread.start()
 
 	for i in range (0, numSounds):
