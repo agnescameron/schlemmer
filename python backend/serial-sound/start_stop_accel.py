@@ -52,13 +52,14 @@ def channel(num):
 	while True:
 		#if no sound playing on the channel and 
 		#movement above threshold
-		if(norm[num] > 4000 and not playing):
+		if(norm[num] > 6000 and not playing):
 			channels[num].unpause()
 			playing = True
 
 		#if sound playing on the channel and
 		#movement below threshold		
-		if(norm[num] < 4000 and playing):
+		if(norm[num] < 1500 and playing):
+			# channels[num].fadeout(100)
 			channels[num].pause()
 			playing = False
 		
