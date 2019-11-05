@@ -1,14 +1,13 @@
 import serial
 import re
 from time import sleep
+import math
 
-ser = serial.Serial('/dev/cu.usbmodem1421', 115200)#, timeout=0, parity=serial.PARITY_EVEN, rtscts=1)
+ser = serial.Serial('/dev/cu.usbmodem493', 115200)#, timeout=0, parity=serial.PARITY_EVEN, rtscts=1)
 
 while True:
+	ser.flushInput()
 	line = ser.readline().decode("utf-8")
 	data = line.split();
-	vals = data[1:]
-	idNum = data[:1]
-	print(vals)
-	print(idNum)
+	print(data)
 	# sleep(0.1)

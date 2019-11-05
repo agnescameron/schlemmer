@@ -21,7 +21,7 @@ buffer = [0]*20
 for i in range(0, numSounds):
 	channel = pg.mixer.Channel(i)
 	channels.append(channel)
-	drone = pg.mixer.Sound("../../sounds/rehearsal-test/1.wav")
+	drone = pg.mixer.Sound("../../sounds/icebreaker/1.wav")
 	drones.append(drone)
 
 norm = [1]*numSounds

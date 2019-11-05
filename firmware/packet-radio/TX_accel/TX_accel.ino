@@ -28,8 +28,7 @@ Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 // Singleton instance of the radio driver
 RH_RF69 rf69(RFM69_CS, RFM69_INT);
 
-int16_t packetnum = 0;  // packet counter, we increment per xmission
-int id = 0;
+int id = 2;
 
 void setup() 
 {
@@ -84,7 +83,7 @@ void setup()
 int xval, yval, zval;
 
 void loop() {
-  delay(10);  // Wait 0.01 second between transmits, could also 'sleep' here!
+  delay(50);  // Wait 0.05 second between transmits, could also 'sleep' here!
   readTemp();
 
   char radiopacket[20];

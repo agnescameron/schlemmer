@@ -2,7 +2,7 @@
 // -*- mode: C++ -*-
 // Example sketch showing how to create a simple messageing client
 // with the RH_RF69 class. RH_RF69 class does not provide for addressing or
-// reliability, so you should only use RH_RF69  if you do not need the higher
+// reliabilityhttps://learn.adafruit.com/adafruit-feather-32u4-radio-with-rfm69hcw-module/overview, so you should only use RH_RF69  if you do not need the higher
 // level messaging abilities.
 // It is designed to work with the other example rf69_server.
 // Demonstrates the use of AES encryption, setting the frequency and modem 

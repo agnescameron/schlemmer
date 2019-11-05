@@ -29,7 +29,7 @@ Adafruit_ADT7410 tempsensor = Adafruit_ADT7410();
 RH_RF69 rf69(RFM69_CS, RFM69_INT);
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
-int id = 2;
+int id = 5;
 
 void setup() 
 {
