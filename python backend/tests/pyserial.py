@@ -3,7 +3,7 @@ import re
 from time import sleep
 import math
 
-ser = serial.Serial('/dev/cu.usbmodem493', 115200)#, timeout=0, parity=serial.PARITY_EVEN, rtscts=1)
+ser = serial.Serial('/dev/cu.usbmodem527', 115200)#, timeout=0, parity=serial.PARITY_EVEN, rtscts=1)
 
 while True:
 	ser.flushInput()
