@@ -15,7 +15,7 @@ buffer = [0]*20
 
 #change stuff here!
 soundfile = "../sounds/rehearsal-test/0.wav"
-sensors = [0, 1, 2, 3, 4, 5]  #put the number of sensors used
+sensors = [0, 1, 2]  #put the number of sensors used
 norms = [0]*len(sensors)
 
 drone = pg.mixer.Sound("../sounds/rehearsal-test/0.wav")
@@ -26,10 +26,11 @@ def moving_weighted_average(data, bufSize):
 	norms[int(data[0])] = abs(math.sqrt( int(data[1])**2 + int(data[2])**2 + int(data[3])**2 )-16000)
 	avNorm = sum(norms)/len(norms)
 	buffer.append(avNorm)
-	avBuffer = buffer[-bufSize:]
-	movingAv = sum(avBuffer)/bufSize
+	avBuffer1 = buffer[-bufSize:]
+	avBuffer2 = buffer[-2*bufSize:-bufSize]
+	movingAv = sum(avBuffer1)*2/bufSize + sum(avBuffer2)*0.5/bufSize
 	print(movingAv, norms)
-	return movingAv/12000
+	return movingAv/14000
 
 def moving_average(data, bufSize):
 	norms[int(data[0])] = abs(math.sqrt( int(data[1])**2 + int(data[2])**2 + int(data[3])**2 )-16000)
@@ -53,11 +54,9 @@ def getSerial():
 			print(idNum, 'borked')
 		if (len(data) == 4):
 			if (int(data[0]) in sensors) and not borked:		
-				vol[0] = moving_average(data, 20)
-				# vol = 1
-				# vol = moving_weighted_average(data, 20)
+				# vol[0] = moving_average(data, 20)
+				vol[0] = moving_weighted_average(data, 10)
 				print(data)
-				# print(vol)
 
 def channel():
 	while True:
