@@ -7,21 +7,31 @@
 </head> 
 <body id='body'> 
 heeyyyy
-</body>
 
+<button onclick="startStream()">start stream</button>
+
+</body>
 
 
 <script>
 
-$(document).ready(function(){
 	namespace = '/test';
 	var socket = io(namespace);
 
-	socket.on('connect', function() {
-		console.log('client connected')
-	    socket.emit('hello', {data: 'I\'m connected!'});
+	function startStream() {
+		socket.emit('broadcast');
+	}
+
+	socket.on('stream', function() {
+		console.log('starting stream....')
 	});
-});
+
+	$(document).ready(function(){
+		socket.on('connect', function() {
+			console.log('client connected')
+		    socket.emit('hello', {data: 'I\'m connected!'});
+		});
+	});
 
 </script>
 </html>

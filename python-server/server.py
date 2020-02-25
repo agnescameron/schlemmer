@@ -12,12 +12,12 @@ def index():
 
 @socketio.on('hello', namespace='/test')
 def test_message(message):
-    print('server connected')
+    print(message)
     emit('my response', {'data': message['data']})
 
 @socketio.on('broadcast', namespace='/test')
-def test_message(message):
-    emit('my response', {'data': message['data']}, broadcast=True)
+def test_message():
+    emit('stream', broadcast=True)
 
 @socketio.on('disconnect', namespace='/test')
 def test_disconnect():
