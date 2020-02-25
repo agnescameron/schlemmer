@@ -22,6 +22,7 @@ drone = pg.mixer.Sound("../sounds/rehearsal-test/0.wav")
 vol=[0]
 global lastnorm
 
+# weights by most recent movement
 def moving_weighted_average(data, bufSize):
 	norms[int(data[0])] = abs(math.sqrt( int(data[1])**2 + int(data[2])**2 + int(data[3])**2 )-16000)
 	avNorm = sum(norms)/len(norms)
@@ -32,14 +33,14 @@ def moving_weighted_average(data, bufSize):
 	print(movingAv, norms)
 	return movingAv/14000
 
-def moving_average(data, bufSize):
-	norms[int(data[0])] = abs(math.sqrt( int(data[1])**2 + int(data[2])**2 + int(data[3])**2 )-16000)
-	avNorm = sum(norms)/len(norms)
-	buffer.append(avNorm)
-	avBuffer = buffer[-bufSize:]
-	movingAv = sum(avBuffer)/bufSize
-	print(movingAv, norms)
-	return movingAv/12000
+# def moving_average(data, bufSize):
+# 	norms[int(data[0])] = abs(math.sqrt( int(data[1])**2 + int(data[2])**2 + int(data[3])**2 )-16000)
+# 	avNorm = sum(norms)/len(norms)
+# 	buffer.append(avNorm)
+# 	avBuffer = buffer[-bufSize:]
+# 	movingAv = sum(avBuffer)/bufSize
+# 	print(movingAv, norms)
+# 	return movingAv/12000
 
 def getSerial():
 	while True:
