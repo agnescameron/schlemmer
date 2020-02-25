@@ -1,20 +1,27 @@
-#!/usr/bin/env python
+from flask import Flask, render_template
+from flask_socketio import SocketIO, emit
 
-# WS server example
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
-import asyncio
-import websockets
+@app.route('/')
+def index():
+    # return "Hello World!"
+    return render_template('index.html', async_mode=socketio.async_mode)
 
-async def hello(websocket, path):
-    name = await websocket.recv()
-    print(f"< {name}")
+@socketio.on('hello', namespace='/test')
+def test_message(message):
+    print('server connected')
+    emit('my response', {'data': message['data']})
 
-    color = "green"
+@socketio.on('broadcast', namespace='/test')
+def test_message(message):
+    emit('my response', {'data': message['data']}, broadcast=True)
 
-    await websocket.send(color)
-    print(f"> {color}")
+@socketio.on('disconnect', namespace='/test')
+def test_disconnect():
+    print('Client disconnected')
 
-start_server = websockets.serve(hello, "localhost", 8765, compression=None)
-
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+if __name__ == '__main__':
+    socketio.run(app)
