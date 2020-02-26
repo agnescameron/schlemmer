@@ -1,7 +1,8 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
+import pickle
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="./templates", static_folder="./static/dist")
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
@@ -17,6 +18,7 @@ def test_message(message):
 
 @socketio.on('broadcast', namespace='/test')
 def test_message():
+    audioPath = 'sound/0.wav'
     emit('stream', broadcast=True)
 
 @socketio.on('disconnect', namespace='/test')
