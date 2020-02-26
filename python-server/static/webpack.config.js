@@ -1,4 +1,7 @@
-const webpack = require('webpack');const config = {
+const webpack = require('webpack');
+const fs = require('fs');
+
+const config = {
     entry:  __dirname + '/index.js',
     output: {
         path: __dirname + '/dist',
@@ -7,4 +10,11 @@ const webpack = require('webpack');const config = {
     resolve: {
         extensions: ['.js', '.jsx', '.css']
     },
-};module.exports = config;
+  node: {
+  	child_process: "empty",
+    fs: 'empty',
+    tls: 'empty',
+  },
+};
+
+module.exports = config;

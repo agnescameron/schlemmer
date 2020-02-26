@@ -1,10 +1,14 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
+import pygame as pg
 import pickle
 
 app = Flask(__name__, template_folder="./templates", static_folder="./static/dist")
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
+
+pg.mixer.init(frequency=44100, size=-16, channels=1, buffer=4096)
+pg.init()
 
 @app.route('/')
 def index():
@@ -18,8 +22,8 @@ def test_message(message):
 
 @socketio.on('broadcast', namespace='/test')
 def test_message():
-    audioPath = 'sound/0.wav'
-    emit('stream', broadcast=True)
+    drone = pickle.dumps("sound/0.wav")
+    emit('stream', {'data': drone}, broadcast=True)
 
 @socketio.on('disconnect', namespace='/test')
 def test_disconnect():

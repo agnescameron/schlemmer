@@ -12,6 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "child_process": "^1.0.2",
+    "fs": "0.0.1-security",
+    "jquery": "^3.4.1",
+    "pickle": "^0.2.0",
+    "socketio": "^1.0.0",
     "tone": "^13.8.25"
   },
   "devDependencies": {
