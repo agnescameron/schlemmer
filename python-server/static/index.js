@@ -5,7 +5,6 @@ import pickle from 'pickle';
 
 console.log('wahey!')
 
-
 const namespace = '/test';
 const socket = io(namespace);
 

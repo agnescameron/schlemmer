@@ -22,8 +22,9 @@ def test_message(message):
 
 @socketio.on('broadcast', namespace='/test')
 def test_message():
-    drone = pickle.dumps("sound/0.wav")
-    emit('stream', {'data': drone}, broadcast=True)
+    drone = pg.mixer.Sound("sound/0.wav")
+    bytestream = drone.tobytes()
+    emit('stream', {'data': bytestream}, broadcast=True)
 
 @socketio.on('disconnect', namespace='/test')
 def test_disconnect():
