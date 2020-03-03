@@ -1,29 +1,28 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
-import pickle
 
-app = Flask(__name__, template_folder="./templates", static_folder="./static/dist")
+app = Flask(__name__, template_folder="./templates", static_folder="./static")
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+socket = SocketIO(app)
 
 @app.route('/')
 def index():
     # return "Hello World!"
-    return render_template('index.html', async_mode=socketio.async_mode)
+    return render_template('index.html', async_mode=socket.async_mode)
 
-@socketio.on('hello', namespace='/test')
+@socket.on('hello', namespace='/test')
 def test_message(message):
     print(message)
-    emit('my response', {'data': message['data']})
+    emit('response', {'data': message['data']})
 
-@socketio.on('broadcast', namespace='/test')
+@socket.on('broadcast', namespace='/test')
 def test_message():
-    audioPath = 'sound/0.wav'
-    emit('stream', broadcast=True)
+    volume = 10
+    emit('stream', {'data': volume}, broadcast=True)
 
-@socketio.on('disconnect', namespace='/test')
+@socket.on('disconnect', namespace='/test')
 def test_disconnect():
     print('Client disconnected')
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socket.run(app)
