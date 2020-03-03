@@ -1,26 +1,34 @@
-	namespace = '/test';
-	var socket = io(namespace);
+namespace = '/test';
+const socket = io(namespace);
+let player;
 
-	function startStream() {
-		socket.emit('broadcast');
-	}
 
-	socket.on('stream', function(event) {
-		console.log('starting stream.... volume is', event.data)
-	});
+function startStream() {
+	socket.emit('broadcast');
+}
 
-	$(document).ready(function(){
-		socket.on('connect', function() {
-			console.log('client connected')
-		    socket.emit('hello', {data: 'I\'m connected!'});
-		});
-	});
+socket.on('stream', function(event) {
+	console.log('starting stream.... volume is', event.data)
+});
+
+
 
 	const osc = new Tone.Oscillator(440, "sine").toMaster();
 
 //attach a click listener to a play button
-document.getElementById('button').addEventListener('click', async () => {
+$('#button').click( async function () {
 	await Tone.start();
 	document.getElementById('button').innerHTML = 'audio ready'
-	osc.start();
+	player.start();
 })
+
+$(document).ready(function(){
+	//connect websocket
+	socket.on('connect', function() {
+		console.log('client connected')
+	    socket.emit('hello', {data: 'I\'m connected!'});
+	});
+
+	//connect web player
+	player = new Tone.Player('static/0.wav').toMaster();
+});
