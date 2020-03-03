@@ -1,15 +1,30 @@
 <!DOCTYPE HTML> <html lang="en"> 
 
-<head> <meta http-equiv="content-type" content="text/html; charset=utf-8">
- <script src="{{ url_for('static', filename='bundle.js')}}"></script>
-<title>hot seat</title> 
-</head> 
+<head>
+
+	<title>hot seat</title> 
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+
+	<!-- jQuery -->
+	<script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+
+	<!-- socketIO -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+
+	<!-- ToneJS -->
+	<script src="https://unpkg.com/tone@13.8.25/build/Tone.js" crossorigin="anonymous"></script>
+
+</head>
+
+
 <body id='body'> 
-heeyyyy
 
-<button onclick="startStream()">start stream</button>
+	heeyyyy
 
+	<button id="button" onclick="startStream()">start stream</button>
 
 </body>
 
+
+ <script src="{{ url_for('static', filename='client.js')}}"></script>
 </html>
