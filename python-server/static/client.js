@@ -11,11 +11,9 @@ socket.on('stream', function(event) {
 	console.log('starting stream.... volume is', event.data)
 });
 
-
 //attach a click listener to a play button
 $('#button').click( async function () {
 	await Tone.start();
-	document.getElementById('button').innerHTML = 'audio ready'
 	player.start();
 })
 
