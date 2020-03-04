@@ -15,7 +15,18 @@ socket.on('stream', function(event) {
 $('#button').click( async function () {
 	await Tone.start();
 	player.start();
-})
+});
+
+$('#volDown').click(function () {
+	player.volume.value = player.volume.value-1;
+	console.log("volume now", player.volume.value);
+});
+
+$('#volUp').click(function () {
+	player.volume.value = player.volume.value+1;
+	console.log("volume now", player.volume.value);
+});
+
 
 $(document).ready(function(){
 	//connect websocket
@@ -25,5 +36,9 @@ $(document).ready(function(){
 	});
 
 	//connect web player
-	player = new Tone.Player('static/0.wav').toMaster();
+	player = new Tone.Player({
+		'url': 'static/0.wav',
+		'loop': 'true',
+		'volume': 10
+	}).toMaster();
 });
