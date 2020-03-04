@@ -1,9 +1,14 @@
+import threading
+import time
+import random
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__, template_folder="./templates", static_folder="./static")
 app.config['SECRET_KEY'] = 'secret!'
 socket = SocketIO(app)
+
+volume=10
 
 @app.route('/')
 def index():
@@ -17,12 +22,29 @@ def test_message(message):
 
 @socket.on('broadcast', namespace='/test')
 def test_message():
-    volume = 10
     emit('stream', {'data': volume}, broadcast=True)
 
 @socket.on('disconnect', namespace='/test')
 def test_disconnect():
     print('Client disconnected')
 
-if __name__ == '__main__':
+@socket.on('volRequest', namespace='/test')
+def emit_volume():
+    emit('vol', {'data': volume})
+
+def sock():
     socket.run(app, host= '0.0.0.0')
+
+def counter():
+    while True:
+        global volume
+        volume = random.randint(0, 10)
+        print(volume)
+        time.sleep(1)
+
+if __name__ == '__main__':
+    sock = threading.Thread(target=sock)
+    sock.start()
+
+    counter = threading.Thread(target=counter)
+    counter.start()

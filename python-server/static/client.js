@@ -11,10 +11,17 @@ socket.on('stream', function(event) {
 	console.log('starting stream.... volume is', event.data)
 });
 
+socket.on('vol', function(event) {
+	// player.volume.value = event.data.volume;
+	console.log("volume now", event.data);
+	setTimeout(() => { socket.emit('volRequest'); }, 1000);
+});
+
 //attach a click listener to a play button
 $('#button').click( async function () {
 	await Tone.start();
 	player.start();
+	socket.emit('volRequest');
 });
 
 $('#volDown').click(function () {
