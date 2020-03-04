@@ -30,7 +30,7 @@ def test_disconnect():
 
 @socket.on('volRequest', namespace='/test')
 def emit_volume():
-    emit('vol', {'data': volume})
+    emit('vol', {'volume': volume})
 
 def sock():
     socket.run(app, host= '0.0.0.0')
@@ -38,8 +38,7 @@ def sock():
 def counter():
     while True:
         global volume
-        volume = random.randint(0, 10)
-        print(volume)
+        volume = random.randint(-10, 20)
         time.sleep(1)
 
 if __name__ == '__main__':

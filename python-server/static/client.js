@@ -12,8 +12,8 @@ socket.on('stream', function(event) {
 });
 
 socket.on('vol', function(event) {
-	// player.volume.value = event.data.volume;
-	console.log("volume now", event.data);
+	player.volume.value = event.volume;
+	console.log("volume now", event.volume);
 	setTimeout(() => { socket.emit('volRequest'); }, 1000);
 });
 
