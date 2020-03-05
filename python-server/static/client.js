@@ -12,15 +12,16 @@ socket.on('stream', function(event) {
 });
 
 socket.on('vol', function(event) {
-	player.volume.value = event.volume;
+	player.volume.value = event.volume < -2 ? -100 : event.volume;
 	console.log("volume now", event.volume);
-	setTimeout(() => { socket.emit('volRequest'); }, 1000);
+	setTimeout(() => { socket.emit('volRequest'); }, 100);
 });
 
 //attach a click listener to a play button
 $('#button').click( async function () {
 	await Tone.start();
 	player.start();
+	socket.emit('broadcast');
 	socket.emit('volRequest');
 });
 

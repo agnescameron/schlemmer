@@ -11,12 +11,12 @@ app.config['SECRET_KEY'] = 'secret!'
 socket = SocketIO(app)
 
 # serial input
-ser = serial.Serial('/dev/cu.usbmodem1421', 115200)
+ser = serial.Serial('/dev/cu.usbmodem1411', 115200)
 
 # initialising volume
-volume=10
+volume=0
 
-sensors = [0]  #put the number of sensors used
+sensors = [0, 1, 2, 3]  #put the number of sensors used
 print('sensors length is', len(sensors))
 buffer = [0]*20
 norms = [0]*len(sensors)
@@ -33,7 +33,7 @@ def test_message(message):
 
 @socket.on('broadcast', namespace='/test')
 def test_message():
-    emit('stream', {'data': volume}, broadcast=True)
+    emit('stream', {'data': volume})
 
 @socket.on('disconnect', namespace='/test')
 def test_disconnect():
@@ -41,7 +41,7 @@ def test_disconnect():
 
 @socket.on('volRequest', namespace='/test')
 def emit_volume():
-    emit('vol', {'volume': volume})
+    emit('vol', {'volume': (volume-0.5)*10})
 
 def sock():
     socket.run(app, host= '0.0.0.0')
@@ -58,6 +58,7 @@ def moving_weighted_average(data, bufSize):
 
 def getSerial():
     while True:
+        global volume
         ser.flushInput()
         borked = False
         line = ser.readline().decode("utf-8")
@@ -69,9 +70,10 @@ def getSerial():
             print(idNum, 'borked')
         if (len(data) == 4):
             if (int(data[0]) in sensors) and not borked:        
+                # print(int(data[0]), int(data[1]), int(data[2]), int(data[3]))
                 # vol[0] = moving_average(data, 20)
                 volume = moving_weighted_average(data, 10)
-                print(volume)
+                # print((volume-0.5)*10)
 
 
 if __name__ == '__main__':
